@@ -99,6 +99,8 @@ void SelectPlayer()
 			playerStat.hp = 200;
 			playerStat.defence = 20;
 			playerStat.attack = 10;
+			playerClass = PC_Warrior;
+			break;
 		}
 		else if (classNum == PC_Mage)
 		{
@@ -108,6 +110,8 @@ void SelectPlayer()
 			playerStat.hp = 100;
 			playerStat.defence = 1;
 			playerStat.attack = 50;
+			playerClass = PC_Mage;
+			break;
 		}
 		else if (classNum == PC_Archer)
 		{
@@ -117,6 +121,8 @@ void SelectPlayer()
 			playerStat.hp = 150;
 			playerStat.defence = 5;
 			playerStat.attack = 20;
+			playerClass = PC_Archer;
+			break;
 		}
 	}
 }
@@ -128,13 +134,13 @@ void EnterDungeon()
 		cout << "------------------------------" << endl;
 		cout << "던전에 입장했습니다 !" << endl;
 		cout << "------------------------------" << endl;
-		cout << "■■■■■■■■■■■■■■■■■■■" << endl;
-		cout << "■ LEVEL : " << playerStat.level << " ■" << endl;
-		cout << "■    HP : " << playerStat.hp << " ■" << endl;
-		cout << "■   ATT : " << playerStat.attack << " ■" << endl;
-		cout << "■   DEF : " << playerStat.defence << " ■" << endl;
-		cout << "■   EXP : " << playerStat.exp << " ■" << endl;
-		cout << "■■■■■■■■■■■■■■■■■■■" << endl;
+		cout << "■■■■ PLAYER STAT ■■■■" << endl;
+		cout << "          LEVEL : " << playerStat.level << "" << endl;
+		cout << "           HP : " << playerStat.hp << "" << endl;
+		cout << "          ATT : " << playerStat.attack << "" << endl;
+		cout << "          DEF : " << playerStat.defence << "" << endl;
+		cout << "          EXP : " << playerStat.exp << "" << endl;
+		cout << "■■■■■■■■■■■■■■■" << endl;
 		cout << ">> ";
 
 		SpawnMonster();
@@ -208,6 +214,7 @@ void EnterBattle()
 		if (monsterStat.hp == 0)
 		{
 			cout << "몬스터를 처치했습니다 !" << endl;
+			playerStat.exp += monsterStat.exp;
 			WaitKey();
 			return;
 		}
