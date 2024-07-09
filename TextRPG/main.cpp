@@ -18,18 +18,20 @@ enum MonsterClass
 	MC_Orc = 3,
 };
 
-PlayerClass playerClass;
+struct StatInfo
+{
+	int level;
+	int exp;
+	int hp;
+	int attack;
+	int defence;
+};
 
-int level;
-int pexp;
-int hp;
-int attack;
-int defence;
+PlayerClass playerClass;
+StatInfo playerStat;
 
 MonsterClass monsterClass;
-int mHp;
-int mAttack;
-int mDefence;
+StatInfo monsterStat;
 
 void EnterLobby();
 void SelectPlayer();
@@ -92,14 +94,29 @@ void SelectPlayer()
 		if (classNum == PC_Warrior)
 		{
 			cout << "전사로 시작합니다.." << endl;
+			playerStat.level = 1;
+			playerStat.exp = 0;
+			playerStat.hp = 200;
+			playerStat.defence = 20;
+			playerStat.attack = 10;
 		}
 		else if (classNum == PC_Mage)
 		{
 			cout << "마법사로 시작합니다.." << endl;
+			playerStat.level = 1;
+			playerStat.exp = 0;
+			playerStat.hp = 100;
+			playerStat.defence = 1;
+			playerStat.attack = 50;
 		}
 		else if (classNum == PC_Archer)
 		{
 			cout << "궁수로 시작합니다.." << endl;
+			playerStat.level = 1;
+			playerStat.exp = 0;
+			playerStat.hp = 150;
+			playerStat.defence = 5;
+			playerStat.attack = 20;
 		}
 	}
 }
@@ -112,11 +129,11 @@ void EnterDungeon()
 		cout << "던전에 입장했습니다 !" << endl;
 		cout << "------------------------------" << endl;
 		cout << "■■■■■■■■■■■■■■■■■■■" << endl;
-		cout << "■ LEVEL : " << level << " ■" << endl;
-		cout << "■    HP : " << hp << " ■" << endl;
-		cout << "■   ATT : " << attack << " ■" << endl;
-		cout << "■   DEF : " << defence << " ■" << endl;
-		cout << "■   EXP : " << pexp << " ■" << endl;
+		cout << "■ LEVEL : " << playerStat.level << " ■" << endl;
+		cout << "■    HP : " << playerStat.hp << " ■" << endl;
+		cout << "■   ATT : " << playerStat.attack << " ■" << endl;
+		cout << "■   DEF : " << playerStat.defence << " ■" << endl;
+		cout << "■   EXP : " << playerStat.exp << " ■" << endl;
 		cout << "■■■■■■■■■■■■■■■■■■■" << endl;
 		cout << ">> ";
 
@@ -134,7 +151,7 @@ void EnterDungeon()
 		{
 			EnterBattle();
 
-			if (hp == 0)
+			if (playerStat.hp == 0)
 				return;
 		}
 		else
@@ -152,12 +169,24 @@ void SpawnMonster()
 	{
 	case MC_Slime:
 		cout << "슬라임이 등장했습니다 ! (HP:30 / ATK:2 / DEF:0)" << endl;
+		monsterStat.hp = 100;
+		monsterStat.attack = 2;
+		monsterStat.defence = 0;
+		monsterStat.exp = 2;
 		break;
 	case MC_Goblin:
 		cout << "고블린이 등장했습니다 ! (HP:30 / ATK:5 / DEF:3)" << endl;
+		monsterStat.hp = 50;
+		monsterStat.attack = 15;
+		monsterStat.defence = 3;
+		monsterStat.exp = 15;
 		break;
 	case MC_Orc:
 		cout << "오크가 등장했습니다 ! (HP:50/ ATK:12 / DEF:10)" << endl;
+		monsterStat.hp = 150;
+		monsterStat.attack = 30;
+		monsterStat.defence = 15;
+		monsterStat.exp = 30;
 		break;
 	}
 }
@@ -166,34 +195,34 @@ void EnterBattle()
 {
 	while (true)
 	{
-		int damage = attack - mDefence;
+		int damage = playerStat.attack - monsterStat.defence;
 		if (damage < 0)
 			damage = 0;
 
-		mHp -= damage;
-		if (mHp < 0)
-			mHp = 0;
+		monsterStat.hp -= damage;
+		if (monsterStat.hp < 0)
+			monsterStat.hp = 0;
 
-		cout << "몬스터 남은 체력 : " << mHp << endl;
+		cout << "몬스터 남은 체력 : " << monsterStat.hp << endl;
 
-		if (mHp == 0)
+		if (monsterStat.hp == 0)
 		{
 			cout << "몬스터를 처치했습니다 !" << endl;
 			WaitKey();
 			return;
 		}
 
-		damage = mAttack - defence;
+		damage = monsterStat.attack - playerStat.defence;
 		if (damage < 0)
 			damage = 0;
 
-		hp -= damage;
-		if (hp < 0)
-			hp = 0;
+		playerStat.hp -= damage;
+		if (playerStat.hp < 0)
+			playerStat.hp = 0;
 
-		cout << "플레이어 남은 체력 : " << hp << endl;
+		cout << "플레이어 남은 체력 : " << playerStat.hp << endl;
 
-		if (hp == 0)
+		if (playerStat.hp == 0)
 		{
 			cout << "[GAME OVER] 플레이어가 사망했습니다 [GAME OVER]" << endl;
 			WaitKey();
