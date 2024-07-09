@@ -20,8 +20,10 @@ enum MonsterClass
 
 struct StatInfo
 {
+	string className;
 	int level;
 	int exp;
+	int maxhp;
 	int hp;
 	int attack;
 	int defence;
@@ -39,6 +41,7 @@ void EnterDungeon();
 void SpawnMonster();
 void EnterBattle();
 void WaitKey();
+void EnterUpgrade();
 
 int main()
 {
@@ -53,8 +56,16 @@ void EnterLobby()
 		cout << "------------------------------" << endl;
 		cout << "로비에 입장했습니다 !" << endl;
 		cout << "------------------------------" << endl;
-		SelectPlayer();
-
+		if (playerClass == NULL)
+			SelectPlayer();
+		cout << "■■■■ PLAYER STAT ■■■■" << endl;
+		cout << "        CLASS : " << playerStat.className << "" << endl;
+		cout << "          LEVEL : " << playerStat.level << "" << endl;
+		cout << "           HP : " << playerStat.hp << "" << endl;
+		cout << "           ATK : " << playerStat.attack << "" << endl;
+		cout << "           DEF : " << playerStat.defence << "" << endl;
+		cout << "           EXP : " << playerStat.exp << "" << endl;
+		cout << "■■■■■■■■■■■■■■■" << endl;
 		cout << "------------------------------" << endl;
 		cout << "[1] 던전 입장 [2] 2차 전직 [3] 게임 종료" << endl;
 		cout << "------------------------------" << endl;
@@ -69,7 +80,15 @@ void EnterLobby()
 		}
 		else if (num == 2)
 		{
-		
+			if (playerStat.level >= 5)
+			{
+				EnterUpgrade();
+			}
+			else
+			{
+				cout << "2차 전직은 레벨 5 이상부터 가능합니다." << endl;
+				WaitKey();
+			}
 		}
 		else
 		{
@@ -94,8 +113,10 @@ void SelectPlayer()
 		if (classNum == PC_Warrior)
 		{
 			cout << "전사로 시작합니다.." << endl;
+			playerStat.className = "전사";
 			playerStat.level = 1;
 			playerStat.exp = 0;
+			playerStat.maxhp = 200;
 			playerStat.hp = 200;
 			playerStat.defence = 20;
 			playerStat.attack = 10;
@@ -105,8 +126,10 @@ void SelectPlayer()
 		else if (classNum == PC_Mage)
 		{
 			cout << "마법사로 시작합니다.." << endl;
+			playerStat.className = "마법사";
 			playerStat.level = 1;
 			playerStat.exp = 0;
+			playerStat.maxhp = 100;
 			playerStat.hp = 100;
 			playerStat.defence = 1;
 			playerStat.attack = 50;
@@ -116,8 +139,10 @@ void SelectPlayer()
 		else if (classNum == PC_Archer)
 		{
 			cout << "궁수로 시작합니다.." << endl;
+			playerStat.className = "궁수";
 			playerStat.level = 1;
 			playerStat.exp = 0;
+			playerStat.maxhp = 150;
 			playerStat.hp = 150;
 			playerStat.defence = 5;
 			playerStat.attack = 20;
@@ -129,17 +154,19 @@ void SelectPlayer()
 
 void EnterDungeon()
 {
+	system("cls");
 	while (true)
 	{
 		cout << "------------------------------" << endl;
 		cout << "던전에 입장했습니다 !" << endl;
 		cout << "------------------------------" << endl;
 		cout << "■■■■ PLAYER STAT ■■■■" << endl;
+		cout << "        CLASS : " << playerStat.className << "" << endl;
 		cout << "          LEVEL : " << playerStat.level << "" << endl;
 		cout << "           HP : " << playerStat.hp << "" << endl;
-		cout << "          ATT : " << playerStat.attack << "" << endl;
-		cout << "          DEF : " << playerStat.defence << "" << endl;
-		cout << "          EXP : " << playerStat.exp << "" << endl;
+		cout << "           ATK : " << playerStat.attack << "" << endl;
+		cout << "           DEF : " << playerStat.defence << "" << endl;
+		cout << "           EXP : " << playerStat.exp << "" << endl;
 		cout << "■■■■■■■■■■■■■■■" << endl;
 		cout << ">> ";
 
@@ -162,6 +189,7 @@ void EnterDungeon()
 		}
 		else
 		{
+			system("cls");
 			return;
 		}
 	}
@@ -199,6 +227,7 @@ void SpawnMonster()
 
 void EnterBattle()
 {
+	int temp = 15;
 	while (true)
 	{
 		int damage = playerStat.attack - monsterStat.defence;
@@ -215,6 +244,15 @@ void EnterBattle()
 		{
 			cout << "몬스터를 처치했습니다 !" << endl;
 			playerStat.exp += monsterStat.exp;
+			if (playerStat.exp >= (playerStat.level * temp))
+			{
+				cout << "레벨업 했습니다 !!" << endl;
+				playerStat.level++;
+				playerStat.maxhp += 30;
+				playerStat.hp = playerStat.maxhp;
+				playerStat.attack += 10;
+				playerStat.defence += 2;
+			}
 			WaitKey();
 			return;
 		}
@@ -245,4 +283,72 @@ void WaitKey()
 	int num;
 	cin >> num;
 	system("cls");
+}
+
+void EnterUpgrade()
+{
+	cout << "------------------------------" << endl;
+	cout << "2차 전직을 선택해주세요." << endl;
+	cout << "------------------------------" << endl;
+	if (playerClass == PC_Warrior)
+	{
+		cout << "[1] 팔라딘 [2] 용기사" << endl;
+		cout << ">> ";
+		int num;
+		cin >> num;
+		switch (num)
+		{
+		case 1:
+			break;
+		case 2:
+			
+			break;
+		default:
+			return;
+		}
+	}
+	else if (playerClass == PC_Mage)
+	{
+		cout << "[1] 소서리스 [2] 프리스트" << endl;
+		cout << ">> ";
+		int num;
+		cin >> num;
+		switch (num)
+		{
+		case 1:
+			cout << "소서리스로 전직했습니다" << endl;
+			playerStat.className = "소서리스";
+			playerStat.maxhp += playerStat.maxhp / 10;
+			playerStat.hp = playerStat.maxhp;
+			playerStat.defence += playerStat.defence / 10;
+			playerStat.attack += playerStat.attack / 10;
+			break;
+		case 2:
+			cout << "프리스트로 전직했습니다" << endl;
+			playerStat.className = "프리스트";
+			playerStat.maxhp += playerStat.maxhp / 10;
+			playerStat.hp = playerStat.maxhp;
+			playerStat.defence += playerStat.defence / 10;
+			playerStat.attack += playerStat.attack / 10;
+			break;
+		default:
+			return;
+		}
+	}
+	else if (playerClass == PC_Archer)
+	{
+		cout << "[1] 헌터 [2] 저격수" << endl;
+		cout << ">> ";
+		int num;
+		cin >> num;
+		switch (num)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		default:
+			return;
+		}
+	}
 }
